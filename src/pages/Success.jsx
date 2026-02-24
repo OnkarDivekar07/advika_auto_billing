@@ -5,8 +5,10 @@ export default function Success() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => navigate("/"), 2000);
-  }, []);
+    const timer = setTimeout(() => navigate("/"), 2000);
+
+    return () => clearTimeout(timer);
+  }, [navigate]); // ✅ FIX
 
   return (
     <div className="center">

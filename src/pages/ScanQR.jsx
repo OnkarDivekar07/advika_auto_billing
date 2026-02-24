@@ -33,7 +33,7 @@ export default function ScanQR() {
         scannerRef.current.stop().catch(() => {});
       }
     };
-  }, []);
+  }, [navigate]); // ✅ FIX
 
   return (
     <div
