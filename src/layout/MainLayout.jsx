@@ -1,29 +1,37 @@
+import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import "./layout.css";
 
 export default function MainLayout() {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="app">
-      {/* SIDEBAR */}
-      <aside className="sidebar">
-        <h2 className="logo">Advika Auto </h2>
+      {/* ☰ Mobile Hamburger */}
+      <button className="hamburger" onClick={() => setOpen(true)}>
+        ☰
+      </button>
 
-        <nav>
-          <NavLink to="/" end>
-            QR Scan करा
-          </NavLink>
+      {/* Sidebar */}
+      <aside className={`sidebar ${open ? "open" : ""}`}>
+        <div className="sidebar-header">
+          <h2>Advika Auto</h2>
+          <button className="close" onClick={() => setOpen(false)}>
+            ✕
+          </button>
+        </div>
 
-          <NavLink to="/daily-entries">
-            दैनंदिन नोंदी
-          </NavLink>
-
-          <NavLink to="/add-stock">
-            स्टॉक जोडा
-          </NavLink>
+        <nav onClick={() => setOpen(false)}>
+          <NavLink to="/" end>QR Scan करा</NavLink>
+          <NavLink to="/daily-entries">दैनंदिन नोंदी</NavLink>
+          <NavLink to="/add-stock">स्टॉक जोडा</NavLink>
         </nav>
       </aside>
 
-      {/* CONTENT */}
+      {/* Overlay */}
+      {open && <div className="overlay" onClick={() => setOpen(false)} />}
+
+      {/* Page Content */}
       <main className="content">
         <Outlet />
       </main>

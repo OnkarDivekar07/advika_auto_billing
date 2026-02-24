@@ -1,84 +1,110 @@
+/* App Layout */
 .app {
   display: flex;
   min-height: 100vh;
-  height: 100%;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont;
 }
 
-/* SIDEBAR */
+/* Sidebar */
 .sidebar {
-  width: 240px;
-  background: linear-gradient(180deg, #1f334a, #162638);
-  color: white;
-  padding: 24px 18px;
+  width: 260px;
+  background: linear-gradient(180deg, #0f172a, #020617);
+  color: #fff;
+  padding: 16px;
 }
 
-.logo {
-  margin-bottom: 40px;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+/* Sidebar header (mobile only) */
+.sidebar-header {
+  display: none;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* NAV */
+/* Links */
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .sidebar a {
-  display: block;
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  border-radius: 10px;
-  color: #e6edf3;
+  color: #e5e7eb;
   text-decoration: none;
-  font-size: 15px;
-  transition: all 0.2s ease;
-}
-
-.sidebar a:hover {
-  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+  border-radius: 6px;
 }
 
 .sidebar a.active {
   background: #2fa98c;
-  color: white;
-  font-weight: 500;
+  color: #fff;
 }
 
-/* CONTENT */
+/* Content */
 .content {
   flex: 1;
-  padding: 32px;
-  background: #f5f7fa;
-  overflow-y: auto;
+  padding: 16px;
+  overflow-x: hidden;
 }
 
-/* COMMON */
-.card {
-  background: white;
-  padding: 24px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+/* Hamburger Button */
+.hamburger {
+  display: none;
 }
 
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+/* Overlay */
+.overlay {
+  display: none;
 }
 
-.primary-btn {
-  background: #2fa98c;
-  border: none;
-  color: white;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-}
+/* 📱 MOBILE */
+@media (max-width: 768px) {
+  .app {
+    flex-direction: column;
+  }
 
-.primary-btn:hover {
-  background: #259a7f;
-}
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: 100%;
+    z-index: 1001;
+    transition: left 0.3s ease;
+  }
 
-.full {
-  width: 100%;
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-header {
+    display: flex;
+  }
+
+  .close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 22px;
+  }
+
+  .hamburger {
+    display: block;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1100;
+    font-size: 24px;
+    background: none;
+    border: none;
+  }
+
+  .content {
+    margin-top: 48px;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
 }
