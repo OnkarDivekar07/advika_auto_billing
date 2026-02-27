@@ -19,6 +19,8 @@ export default function Billing() {
 
   if (!product) return <p className="loading">लोड होत आहे...</p>;
 
+  const displayName = product.marathiName || product.name;
+
   const total = Number(qty || 0) * Number(price || 0);
 
   const submitBill = async () => {
@@ -48,7 +50,7 @@ export default function Billing() {
   return (
     <div className="page">
       <div className="card billing-card">
-        <h2 className="product-name">{product.name}</h2>
+        <h2 className="product-name">{displayName}</h2>
 
         <div className="field">
           <label>नग (Quantity)</label>
