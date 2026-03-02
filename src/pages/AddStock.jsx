@@ -6,9 +6,10 @@ export default function AddStock() {
   const [scanning, setScanning] = useState(false);
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState("");
+  const [price, setPrice] = useState(""); // 🔥 NEW
 
   const scannerRef = useRef(null);
-  const isRunningRef = useRef(false); // 🔥 important
+  const isRunningRef = useRef(false);
 
   const startScan = () => {
     setScanning(true);
@@ -29,7 +30,6 @@ export default function AddStock() {
 
           isRunningRef.current = false;
           await scanner.stop();
-
           setScanning(false);
 
           const productId = decodedText.trim();
@@ -58,14 +58,23 @@ export default function AddStock() {
       return;
     }
 
-    await API.post("/products/add-stock", {
+    // 🔥 Build payload dynamically
+    const payload = {
       productId: product.id,
       addQuantity: qty,
-    });
+    };
+
+    if (price !== "") {
+      payload.price = Number(price);
+    }
+
+    await API.post("/products/add-stock", payload);
 
     alert("स्टॉक यशस्वीरीत्या अपडेट झाला ✅");
+
     setProduct(null);
     setQty("");
+    setPrice("");
   };
 
   return (
@@ -98,8 +107,18 @@ export default function AddStock() {
           <input
             type="number"
             min="1"
+            placeholder="प्रमाण"
             value={qty}
             onChange={(e) => setQty(e.target.value)}
+          />
+
+          {/* 🔥 Optional price */}
+          <input
+            type="number"
+            min="0"
+            placeholder="नवीन किंमत (ऐच्छिक)"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
           />
 
           <button className="primary-btn full" onClick={submitStock}>
