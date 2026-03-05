@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
 /* MAIN LAYOUT */
 import MainLayout from "./layout/MainLayout";
-
 /* MAIN PAGES */
 import Home from "./pages/Home";
 import DailyEntries from "./pages/DailyEntries";
@@ -17,8 +17,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
         {/* 🔵 MAIN PAGES WITH SIDEBAR */}
-        <Route element={<MainLayout />}>
+        <Route element={
+  <ProtectedRoute>
+    <MainLayout />
+  </ProtectedRoute>
+}>
           <Route path="/" element={<Home />} />
           <Route path="/daily-entries" element={<DailyEntries />} />
           <Route path="/add-stock" element={<AddStock />} />
