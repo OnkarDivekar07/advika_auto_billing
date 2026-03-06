@@ -7,10 +7,9 @@ export default function AddStock() {
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState("");
   const [price, setPrice] = useState("");
-
-  // 🔥 NEW threshold states
   const [lowerThreshold, setLowerThreshold] = useState("");
   const [upperThreshold, setUpperThreshold] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const scannerRef = useRef(null);
   const isRunningRef = useRef(false);
@@ -32,20 +31,28 @@ export default function AddStock() {
         async (decodedText) => {
           if (!isRunningRef.current) return;
 
-          isRunningRef.current = false;
-          await scanner.stop();
-          setScanning(false);
+          try {
+            isRunningRef.current = false;
+            await scanner.stop();
+            setScanning(false);
 
-          const productId = decodedText.trim();
-          const res = await API.get(`/products/${productId}`);
-          setProduct(res.data);
+            const productId = decodedText.trim();
+            const res = await API.get(`/products/${productId}`);
+
+            setProduct(res.data);
+          } catch (error) {
+            console.error(error);
+            alert("प्रॉडक्ट सापडला नाही ❌");
+          }
         }
       )
       .then(() => {
         isRunningRef.current = true;
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         setScanning(false);
+        alert("कॅमेरा सुरू झाला नाही ❌");
       });
 
     return () => {
@@ -56,39 +63,51 @@ export default function AddStock() {
     };
   }, [scanning]);
 
+  const resetForm = () => {
+    setProduct(null);
+    setQty("");
+    setPrice("");
+    setLowerThreshold("");
+    setUpperThreshold("");
+  };
+
   const submitStock = async () => {
-    if (!qty || qty <= 0) {
+    if (!qty || Number(qty) <= 0) {
       alert("प्रमाण भरा");
       return;
     }
 
     const payload = {
       productId: product.id,
-      addQuantity: qty,
+      addQuantity: Number(qty),
     };
 
-    if (price !== "") {
-      payload.price = Number(price);
+    if (price !== "") payload.price = Number(price);
+    if (lowerThreshold !== "") payload.lower_threshold = Number(lowerThreshold);
+    if (upperThreshold !== "") payload.upper_threshold = Number(upperThreshold);
+
+    try {
+      setLoading(true);
+
+      const res = await API.post("/products/add-stock", payload);
+
+      if (res.status === 200 || res.status === 201) {
+        alert("स्टॉक यशस्वीरीत्या अपडेट झाला ✅");
+        resetForm();
+      } else {
+        alert("स्टॉक अपडेट झाला नाही ❌");
+      }
+    } catch (error) {
+      console.error(error);
+
+      const msg =
+        error.response?.data?.message ||
+        "स्टॉक अपडेट करताना त्रुटी झाली ❌";
+
+      alert(msg);
+    } finally {
+      setLoading(false);
     }
-
-    // 🔥 NEW optional thresholds
-    if (lowerThreshold !== "") {
-      payload.lower_threshold = Number(lowerThreshold);
-    }
-
-    if (upperThreshold !== "") {
-      payload.upper_threshold = Number(upperThreshold);
-    }
-
-    await API.post("/products/add-stock", payload);
-
-    alert("स्टॉक यशस्वीरीत्या अपडेट झाला ✅");
-
-    setProduct(null);
-    setQty("");
-    setPrice("");
-    setLowerThreshold("");
-    setUpperThreshold("");
   };
 
   return (
@@ -134,7 +153,6 @@ export default function AddStock() {
             onChange={(e) => setPrice(e.target.value)}
           />
 
-          {/* 🔥 NEW Threshold Inputs */}
           <input
             type="number"
             min="0"
@@ -151,8 +169,12 @@ export default function AddStock() {
             onChange={(e) => setUpperThreshold(e.target.value)}
           />
 
-          <button className="primary-btn full" onClick={submitStock}>
-            स्टॉक अपडेट करा
+          <button
+            className="primary-btn full"
+            onClick={submitStock}
+            disabled={loading}
+          >
+            {loading ? "अपडेट होत आहे..." : "स्टॉक अपडेट करा"}
           </button>
         </div>
       )}
