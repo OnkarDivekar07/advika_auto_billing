@@ -6,7 +6,11 @@ export default function AddStock() {
   const [scanning, setScanning] = useState(false);
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState("");
-  const [price, setPrice] = useState(""); // 🔥 NEW
+  const [price, setPrice] = useState("");
+
+  // 🔥 NEW threshold states
+  const [lowerThreshold, setLowerThreshold] = useState("");
+  const [upperThreshold, setUpperThreshold] = useState("");
 
   const scannerRef = useRef(null);
   const isRunningRef = useRef(false);
@@ -58,7 +62,6 @@ export default function AddStock() {
       return;
     }
 
-    // 🔥 Build payload dynamically
     const payload = {
       productId: product.id,
       addQuantity: qty,
@@ -68,6 +71,15 @@ export default function AddStock() {
       payload.price = Number(price);
     }
 
+    // 🔥 NEW optional thresholds
+    if (lowerThreshold !== "") {
+      payload.lower_threshold = Number(lowerThreshold);
+    }
+
+    if (upperThreshold !== "") {
+      payload.upper_threshold = Number(upperThreshold);
+    }
+
     await API.post("/products/add-stock", payload);
 
     alert("स्टॉक यशस्वीरीत्या अपडेट झाला ✅");
@@ -75,6 +87,8 @@ export default function AddStock() {
     setProduct(null);
     setQty("");
     setPrice("");
+    setLowerThreshold("");
+    setUpperThreshold("");
   };
 
   return (
@@ -112,13 +126,29 @@ export default function AddStock() {
             onChange={(e) => setQty(e.target.value)}
           />
 
-          {/* 🔥 Optional price */}
           <input
             type="number"
             min="0"
             placeholder="नवीन किंमत (ऐच्छिक)"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+          />
+
+          {/* 🔥 NEW Threshold Inputs */}
+          <input
+            type="number"
+            min="0"
+            placeholder="किमान स्टॉक (Min Threshold)"
+            value={lowerThreshold}
+            onChange={(e) => setLowerThreshold(e.target.value)}
+          />
+
+          <input
+            type="number"
+            min="0"
+            placeholder="कमाल स्टॉक (Max Threshold)"
+            value={upperThreshold}
+            onChange={(e) => setUpperThreshold(e.target.value)}
           />
 
           <button className="primary-btn full" onClick={submitStock}>
