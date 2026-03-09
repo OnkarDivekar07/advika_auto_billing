@@ -23,8 +23,10 @@ export default function MainLayout() {
 
         <nav onClick={() => setOpen(false)}>
           <NavLink to="/" end>QR Scan करा</NavLink>
+          <NavLink to="/search">Product Search</NavLink>
           <NavLink to="/daily-entries">दैनंदिन नोंदी</NavLink>
           <NavLink to="/add-stock">स्टॉक जोडा</NavLink>
+          
         </nav>
       </aside>
 

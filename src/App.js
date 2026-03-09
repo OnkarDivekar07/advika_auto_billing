@@ -12,6 +12,7 @@ import AddStock from "./pages/AddStock";
 import ScanQR from "./pages/ScanQR";
 import Billing from "./pages/Billing";
 import Success from "./pages/Success";
+import SearchProducts from "./pages/SearchProducts";
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/daily-entries" element={<DailyEntries />} />
           <Route path="/add-stock" element={<AddStock />} />
+          <Route path="/search" element={<SearchProducts/>}/>
         </Route>
 
         {/* 🟢 FLOW / NESTED PAGES (NO SIDEBAR) */}
