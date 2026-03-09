@@ -5,7 +5,7 @@ export default function Success() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => navigate("/"), 2000);
+    const timer = setTimeout(() => navigate("/search"), 2000);
 
     return () => clearTimeout(timer);
   }, [navigate]); // ✅ FIX
