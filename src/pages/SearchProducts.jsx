@@ -26,9 +26,17 @@ export default function SearchProducts() {
   };
 
   const filteredProducts = products.filter((p) => {
-    const name = (p.name || p.marathiName || "").toLowerCase(); // ✅ English first
-    return name.includes(search.toLowerCase());
-  });
+  const name = (p.name || p.marathiName || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+
+  const words = search
+    .toLowerCase()
+    .trim()
+    .split(/\s+/);
+
+  return words.every((word) => name.includes(word));
+});
 
   if (loading) return <p className="no-result">Loading...</p>;
 
