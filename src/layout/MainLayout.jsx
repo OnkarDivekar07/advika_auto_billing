@@ -26,7 +26,7 @@ export default function MainLayout() {
           <NavLink to="/search">Product Search</NavLink>
           <NavLink to="/daily-entries">दैनंदिन नोंदी</NavLink>
           <NavLink to="/add-stock">स्टॉक जोडा</NavLink>
-          
+          <NavLink to="/search-stock">Add Stock</NavLink>
         </nav>
       </aside>
 

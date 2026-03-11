@@ -1,8 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import API from "../api";
+import { useParams, useNavigate } from "react-router-dom"; // ✅ fixed import
 
 export default function AddStock() {
+  const { productId } = useParams();
+  const navigate = useNavigate(); // already correct
+
   const [scanning, setScanning] = useState(false);
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState("");
@@ -17,6 +21,22 @@ export default function AddStock() {
   const startScan = () => {
     setScanning(true);
   };
+
+  useEffect(() => {
+    if (!productId) return;
+
+    const fetchProduct = async () => {
+      try {
+        const res = await API.get(`/products/${productId}`);
+        setProduct(res.data);
+      } catch (error) {
+        console.error(error);
+        alert("प्रॉडक्ट सापडला नाही ❌");
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
 
   useEffect(() => {
     if (!scanning) return;
@@ -93,7 +113,7 @@ export default function AddStock() {
 
       if (res.status === 200 || res.status === 201) {
         alert("स्टॉक यशस्वीरीत्या अपडेट झाला ✅");
-        resetForm();
+        navigate("/search-stock");
       } else {
         alert("स्टॉक अपडेट झाला नाही ❌");
       }
