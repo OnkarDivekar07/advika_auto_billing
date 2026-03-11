@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Html5Qrcode } from "html5-qrcode";
 import API from "../api";
-import { useParams, useNavigate } from "react-router-dom"; // ✅ fixed import
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function AddStock() {
   const { productId } = useParams();
-  const navigate = useNavigate(); // already correct
+  const navigate = useNavigate();
 
   const [scanning, setScanning] = useState(false);
   const [product, setProduct] = useState(null);
@@ -113,6 +113,7 @@ export default function AddStock() {
 
       if (res.status === 200 || res.status === 201) {
         alert("स्टॉक यशस्वीरीत्या अपडेट झाला ✅");
+        resetForm(); // ✅ FIX: now function is used
         navigate("/search-stock");
       } else {
         alert("स्टॉक अपडेट झाला नाही ❌");
