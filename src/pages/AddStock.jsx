@@ -6,7 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 export default function AddStock() {
   const { productId } = useParams();
   const navigate = useNavigate();
-
+  const [suggestedOrder, setSuggestedOrder] = useState(null);
   const [scanning, setScanning] = useState(false);
   const [product, setProduct] = useState(null);
   const [qty, setQty] = useState("");
@@ -29,6 +29,17 @@ export default function AddStock() {
       try {
         const res = await API.get(`/products/${productId}`);
         setProduct(res.data);
+
+        // 🔹 Fetch suggested reorder quantity
+    const reorderRes = await API.get("/reorder/suggested-order-quantity");
+
+    const found = reorderRes.data.find(
+      (p) => p.id === res.data.id
+    );
+
+    if (found) {
+      setSuggestedOrder(found.suggested_order_quantity);
+    }
       } catch (error) {
         console.error(error);
         alert("प्रॉडक्ट सापडला नाही ❌");
@@ -189,7 +200,11 @@ export default function AddStock() {
             value={upperThreshold}
             onChange={(e) => setUpperThreshold(e.target.value)}
           />
-
+         {suggestedOrder !== null && (
+  <p style={{ marginTop: "10px", fontWeight: "bold", color: "red" }}>
+    सुचवलेली ऑर्डर मात्रा: {suggestedOrder}
+  </p>
+)}
           <button
             className="primary-btn full"
             onClick={submitStock}
